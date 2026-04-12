@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #0a120e;
+  color: #d1e0d9;
+}
+
+/* Scrollbar — teal accents */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 217, 166, 0.2);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 217, 166, 0.35);
+}
+
+/* ── Utility classes ── */
+.glass {
+  background: rgba(26, 40, 34, 0.6);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 217, 166, 0.06);
+}
+.glass-strong {
+  background: rgba(26, 40, 34, 0.85);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(0, 217, 166, 0.1);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #00D9A6 0%, #34d399 50%, #6ee7b7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glow-accent {
+  box-shadow: 0 0 24px rgba(0, 217, 166, 0.2), 0 0 64px rgba(0, 217, 166, 0.06);
+}
+.glow-accent-sm {
+  box-shadow: 0 0 12px rgba(0, 217, 166, 0.15);
+}
+
+/* Teal accent line on cards */
+.card-accent-line {
+  position: relative;
+}
+.card-accent-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 217, 166, 0.3), transparent);
+}
