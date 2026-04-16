@@ -2,19 +2,21 @@ import { forwardRef } from 'react';
 
 const variants = {
   primary:
-    'bg-accent text-surface-950 font-bold shadow-lg shadow-accent/20 hover:shadow-accent/30 hover:brightness-110',
+    'bg-[#5B6EFF] text-white hover:bg-[#3F51D1] hover:shadow-lg hover:shadow-[#5B6EFF]/15',
   secondary:
-    'bg-transparent text-accent border border-accent/30 hover:bg-accent/5 hover:border-accent/50',
+    'text-[#475569] hover:text-[#0F172A] border border-gray-200 hover:border-gray-300 bg-transparent',
   ghost:
-    'text-surface-300 hover:text-white hover:bg-white/5',
+    'text-[#475569] hover:text-[#0F172A] hover:bg-gray-50',
   danger:
-    'bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20',
+    'bg-red-50 text-red-600 hover:bg-red-100',
+  white:
+    'bg-white text-[#0F172A] hover:bg-gray-50 border border-gray-200',
 };
 
 const sizes = {
-  sm: 'px-4 py-2 text-sm rounded-lg gap-1.5',
-  md: 'px-6 py-2.5 text-sm rounded-lg gap-2',
-  lg: 'px-8 py-3.5 text-base rounded-lg gap-2.5',
+  sm: 'px-3.5 py-1.5 text-[13px] rounded-[4px] gap-1.5',
+  md: 'px-5 py-2 text-sm rounded-[5px] gap-2',
+  lg: 'px-6 py-2.5 text-[15px] rounded-[5px] gap-2',
 };
 
 const Button = forwardRef(
@@ -24,8 +26,8 @@ const Button = forwardRef(
         ref={ref}
         className={`
           inline-flex items-center justify-center font-semibold
-          transition-all duration-200 cursor-pointer
-          disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:brightness-100
+          transition-all duration-150 cursor-pointer
+          disabled:opacity-40 disabled:cursor-not-allowed
           ${variants[variant]} ${sizes[size]} ${className}
         `}
         {...props}

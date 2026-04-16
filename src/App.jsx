@@ -1,7 +1,11 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import PricingPage from './pages/PricingPage';
+import ContactPage from './pages/ContactPage';
+import ProductPage from './pages/ProductPage';
 import DashboardLayout from './pages/DashboardLayout';
 import OverviewPage from './pages/OverviewPage';
 import InventoryPage from './pages/InventoryPage';
@@ -19,6 +23,14 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import BusinessList from './pages/admin/BusinessList';
 import UsageLogs from './pages/admin/UsageLogs';
 import ErrorLogs from './pages/admin/ErrorLogs';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -38,9 +50,13 @@ function AdminPrivateRoute({ children }) {
 export default function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<LandingPage />} />
+        <Route path="/product" element={<ProductPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route
           path="/login"
           element={
@@ -94,8 +110,8 @@ export default function App() {
         </Route>
 
         {/* Redirects */}
-        <Route path="/products" element={<Navigate to="/dashboard/products" />} />
-        <Route path="/products/*" element={<Navigate to="/dashboard/products" />} />
+        <Route path="/products" element={<Navigate to="/product" />} />
+        <Route path="/products/*" element={<Navigate to="/product" />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>

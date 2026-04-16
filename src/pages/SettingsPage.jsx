@@ -41,7 +41,7 @@ export default function SettingsPage() {
   if (!store) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="w-8 h-8 border-2 border-brand-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-primary-400 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -50,59 +50,59 @@ export default function SettingsPage() {
     <div className="space-y-6 animate-fade-in max-w-2xl">
       <div>
         <h1 className="text-3xl font-bold text-white mb-1">Settings</h1>
-        <p className="text-surface-200/50">Configure your store and AI settings</p>
+        <p className="text-surface-400">Configure your store and AI settings</p>
       </div>
 
       {/* Store Settings */}
-      <div className="glass-strong rounded-2xl p-6 space-y-5">
+      <div className="bg-surface-800 border border-surface-700 rounded-2xl p-6 space-y-5">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-brand-600/20 flex items-center justify-center">
-            <SettingsIcon className="w-5 h-5 text-brand-400" />
+          <div className="w-10 h-10 rounded-xl bg-primary-400/15 flex items-center justify-center">
+            <SettingsIcon className="w-5 h-5 text-primary-400" />
           </div>
           <h2 className="text-lg font-bold text-white">Store Settings</h2>
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-surface-200/70">Store Name</label>
+          <label className="text-sm font-medium text-surface-300">Store Name</label>
           <input
             id="settings-store-name"
             type="text"
             value={storeName}
             onChange={(e) => setStoreName(e.target.value)}
-            className="w-full px-4 py-3 bg-surface-900/50 border border-white/10 rounded-xl text-white focus:border-brand-500 outline-none transition-colors"
+            className="w-full px-4 py-3 bg-surface-900 border border-surface-700 rounded-xl text-white focus:border-primary-400 outline-none transition-colors"
           />
         </div>
 
         {/* API Key */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-surface-200/70 flex items-center gap-2">
+          <label className="text-sm font-medium text-surface-300 flex items-center gap-2">
             <Key className="w-4 h-4" /> API Key
           </label>
           <div className="flex items-center gap-3">
-            <code className="flex-1 px-4 py-3 bg-surface-900/50 border border-white/10 rounded-xl text-surface-200/60 font-mono text-sm overflow-hidden">
+            <code className="flex-1 px-4 py-3 bg-surface-900 border border-surface-700 rounded-xl text-surface-300 font-mono text-sm overflow-hidden">
               {store.api_key}
             </code>
             <button
               onClick={copyKey}
-              className="p-3 rounded-xl bg-white/5 hover:bg-white/10 text-surface-200/60 hover:text-white transition-all"
+              className="p-3 rounded-xl bg-surface-700 hover:bg-surface-600 text-surface-400 hover:text-white transition-all"
             >
-              {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5" />}
+              {copied ? <Check className="w-5 h-5 text-primary-400" /> : <Copy className="w-5 h-5" />}
             </button>
           </div>
         </div>
       </div>
 
       {/* AI Settings */}
-      <div className="glass-strong rounded-2xl p-6 space-y-5">
+      <div className="bg-surface-800 border border-surface-700 rounded-2xl p-6 space-y-5">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-purple-600/20 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-purple-500/15 flex items-center justify-center">
             <Bot className="w-5 h-5 text-purple-400" />
           </div>
           <h2 className="text-lg font-bold text-white">AI Configuration</h2>
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-surface-200/70">LLM Provider</label>
+          <label className="text-sm font-medium text-surface-300">LLM Provider</label>
           <div className="grid grid-cols-2 gap-3">
             {[
               { id: 'groq', name: 'Groq', model: 'LLaMA 3.3 70B', desc: 'Fast inference, free tier' },
@@ -113,15 +113,15 @@ export default function SettingsPage() {
                 onClick={() => setLlmProvider(id)}
                 className={`p-4 rounded-xl border text-left transition-all ${
                   llmProvider === id
-                    ? 'border-brand-500/50 bg-brand-600/10'
-                    : 'border-white/5 bg-white/[0.02] hover:border-white/10'
+                    ? 'border-primary-400/40 bg-primary-400/10'
+                    : 'border-surface-700 bg-surface-900 hover:border-surface-600'
                 }`}
               >
-                <p className={`font-semibold text-sm ${llmProvider === id ? 'text-brand-400' : 'text-white'}`}>
+                <p className={`font-semibold text-sm ${llmProvider === id ? 'text-primary-400' : 'text-white'}`}>
                   {name}
                 </p>
-                <p className="text-xs text-surface-200/40 mt-1">{model}</p>
-                <p className="text-xs text-surface-200/30 mt-0.5">{desc}</p>
+                <p className="text-xs text-surface-400 mt-1">{model}</p>
+                <p className="text-xs text-surface-500 mt-0.5">{desc}</p>
               </button>
             ))}
           </div>
@@ -132,7 +132,7 @@ export default function SettingsPage() {
       <button
         onClick={handleSave}
         disabled={saving}
-        className="flex items-center gap-2 px-6 py-3 bg-brand-600 hover:bg-brand-500 disabled:opacity-50 text-white rounded-xl font-medium transition-all glow-brand-sm"
+        className="flex items-center gap-2 px-6 py-3 bg-primary-400 hover:bg-primary-600 disabled:opacity-50 text-white rounded-xl font-medium transition-all shadow-sm"
       >
         {saved ? (
           <>

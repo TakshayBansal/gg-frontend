@@ -1,259 +1,377 @@
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  Zap, Bot, Code2, BarChart3, ArrowRight, Check,
-  Cpu, Sparkles, Globe, Shield, ChevronRight,
-  MessageSquare, Package, Layers, TrendingUp,
-  Clock, DollarSign, Users, Target, ShieldCheck
+  ArrowRight, ShoppingCart, Star, Sparkles,
+  Cpu, Radio, Cog, BatteryCharging, CircuitBoard,
+  Zap, TrendingUp, Clock, Users, Plug, Shield,
+  ChevronLeft, ChevronRight, MessageSquare
 } from 'lucide-react';
-import Button from '../components/ui/Button';
-import GradientText from '../components/ui/GradientText';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import AnimatedSection from '../components/ui/AnimatedSection';
-import Badge from '../components/ui/Badge';
 
-/* ── Service cards (matches Figma "AI Solutions for Every Business") ── */
-const services = [
+/* ── Slideshow states ── */
+const slideshowStates = [
   {
-    icon: Bot,
-    title: 'AI Automation',
-    desc: 'Streamline your workflows with intelligent automation that handles repetitive tasks, freeing your team to focus on strategic growth.',
-    bullets: ['Process Automation', 'Smart Workflows', 'Error Reduction'],
+    id: 'widget',
+    label: 'Widget on your site',
+    content: (
+      <div className="p-6 md:p-10">
+        {/* Fake storefront */}
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-8 h-8 rounded-[4px] bg-[#0F172A] flex items-center justify-center">
+            <span className="text-white text-[11px] font-bold">TB</span>
+          </div>
+          <span className="text-[15px] font-bold text-[#0F172A]">TechBazaar</span>
+          <div className="ml-auto flex gap-4 text-[12px] text-[#94A3B8]">
+            <span>Products</span><span>Categories</span><span>Cart (0)</span>
+          </div>
+        </div>
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          {['Arduino Uno', 'Raspberry Pi 4', 'ESP32 DevKit'].map((item) => (
+            <div key={item} className="bg-[#F8FAFC] rounded-[3px] p-4 text-center">
+              <div className="w-full h-16 bg-[#E2E8F0] rounded-[2px] mb-3" />
+              <p className="text-[11px] font-semibold text-[#0F172A]">{item}</p>
+            </div>
+          ))}
+        </div>
+        {/* Floating widget */}
+        <div className="flex justify-end">
+          <div className="w-12 h-12 rounded-[4px] bg-[#5B6EFF] flex items-center justify-center shadow-lg shadow-[#5B6EFF]/25 cursor-pointer">
+            <MessageSquare className="w-5 h-5 text-white" />
+          </div>
+        </div>
+      </div>
+    ),
   },
   {
-    icon: MessageSquare,
-    title: 'AI Chatbots',
-    desc: 'Provide 24/7 customer support with intelligent chatbots that understand context and deliver personalized responses.',
-    bullets: ['24/7 Support', 'Multi-language', 'Lead Qualification'],
+    id: 'query',
+    label: 'User asks a question',
+    content: (
+      <div className="p-6 md:p-10">
+        <div className="flex items-center gap-2.5 mb-6">
+          <div className="w-7 h-7 rounded-[4px] bg-[#5B6EFF]/10 flex items-center justify-center">
+            <Zap className="w-3.5 h-3.5 text-[#5B6EFF]" />
+          </div>
+          <span className="text-[13px] font-bold text-[#0F172A] flex items-center gap-1.5">
+            <img src="/assets/name.svg" alt="GenuineGig" className="h-3 min-w-[70px]" /> Assistant
+          </span>
+          <span className="ml-auto flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Online
+          </span>
+        </div>
+        <div className="flex justify-end mb-5">
+          <div className="bg-[#5B6EFF] text-white px-4 py-2.5 rounded-[5px] rounded-br-[2px] text-[13px] font-medium max-w-[260px]">
+            I want to build a line following robot
+          </div>
+        </div>
+        <div className="flex items-start gap-2.5">
+          <div className="w-6 h-6 rounded-[3px] bg-[#5B6EFF]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <Sparkles className="w-3 h-3 text-[#5B6EFF]" />
+          </div>
+          <div>
+            <div className="flex gap-1 mb-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#5B6EFF] animate-pulse" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#5B6EFF] animate-pulse" style={{ animationDelay: '0.2s' }} />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#5B6EFF] animate-pulse" style={{ animationDelay: '0.4s' }} />
+            </div>
+            <p className="text-[13px] text-[#475569]">Analyzing your project requirements...</p>
+          </div>
+        </div>
+      </div>
+    ),
   },
   {
-    icon: BarChart3,
-    title: 'Predictive Analytics',
-    desc: 'Make data-driven decisions with AI-powered analytics that predict trends and identify growth opportunities.',
-    bullets: ['Sales Forecasting', 'Market Analysis', 'Risk Assessment'],
+    id: 'components',
+    label: 'AI suggests components',
+    content: (
+      <div className="p-6 md:p-10">
+        <div className="flex items-center gap-2.5 mb-5">
+          <div className="w-7 h-7 rounded-[4px] bg-[#5B6EFF]/10 flex items-center justify-center">
+            <Zap className="w-3.5 h-3.5 text-[#5B6EFF]" />
+          </div>
+          <span className="text-[13px] font-bold text-[#0F172A] flex items-center gap-1.5">
+            <img src="/assets/name.svg" alt="GenuineGig" className="h-3 min-w-[70px]" /> Assistant
+          </span>
+        </div>
+        <p className="text-[13px] text-[#475569] mb-4">
+          Here are the components for your line following robot:
+        </p>
+        <div className="space-y-0">
+          {[
+            { name: 'Arduino Uno R3', desc: 'Microcontroller board', price: '₹549', icon: CircuitBoard },
+            { name: 'IR Sensor Module (×2)', desc: 'Line detection sensors', price: '₹120', icon: Radio },
+            { name: 'DC Geared Motors (×2)', desc: '200 RPM with gearbox', price: '₹180', icon: Cog },
+            { name: 'L298N Motor Driver', desc: 'Dual H-bridge driver', price: '₹210', icon: Cpu },
+            { name: '9V Battery Pack', desc: 'Rechargeable supply', price: '₹95', icon: BatteryCharging },
+          ].map((part, i, arr) => (
+            <div key={part.name} className={`flex items-center justify-between py-3.5 ${i < arr.length - 1 ? 'border-b border-gray-100' : ''}`}>
+              <div className="flex items-center gap-3 flex-1 min-w-0">
+                <div className="w-7 h-7 rounded-[3px] bg-[#F8FAFC] flex items-center justify-center flex-shrink-0">
+                  <part.icon className="w-3.5 h-3.5 text-[#5B6EFF]" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[12px] font-bold text-[#0F172A]">{part.name}</div>
+                  <div className="text-[10px] text-[#94A3B8]">{part.desc}</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2.5 flex-shrink-0 ml-3">
+                <span className="text-[12px] font-bold text-[#0F172A]">{part.price}</span>
+                <button className="px-2.5 py-1 text-[10px] font-semibold text-[#5B6EFF] border border-[#5B6EFF]/20 hover:bg-[#5B6EFF]/5 rounded-[3px] transition-colors flex items-center gap-1">
+                  <ShoppingCart className="w-2.5 h-2.5" /> Add
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
   },
+];
+
+/* ── Business cards ── */
+const businessCards = [
   {
-    icon: Users,
-    title: 'Customer Intelligence',
-    desc: 'Understand your customers better with AI that analyzes behavior patterns and predicts preferences.',
-    bullets: ['Behavior Analysis', 'Churn Prediction', 'Segmentation'],
+    icon: TrendingUp,
+    title: 'Revenue Growth',
+    desc: 'AI recommendations increase average order value by surfacing complementary products customers actually need.',
+    highlight: '+40% AOV',
   },
   {
     icon: Zap,
-    title: 'Performance Optimization',
-    desc: 'Optimize your business performance with AI that continuously monitors and improves your operations.',
-    bullets: ['Real-time Monitoring', 'Auto-scaling', 'Cost Optimization'],
+    title: 'Higher Conversions',
+    desc: 'Guided product discovery reduces choice paralysis and turns browsers into buyers.',
+    highlight: '3× conversion',
+  },
+  {
+    icon: Clock,
+    title: 'Time Saved',
+    desc: 'Customers find what they need in seconds, not minutes. Support tickets drop dramatically.',
+    highlight: '-60% tickets',
+  },
+  {
+    icon: Users,
+    title: 'Better Experience',
+    desc: 'Natural language interface makes your store feel intelligent. Customers return because it works.',
+    highlight: '92% satisfaction',
+  },
+  {
+    icon: Plug,
+    title: 'Easy Integration',
+    desc: 'One script tag. Works with Shopify, WooCommerce, and custom storefronts. Live in under 10 minutes.',
+    highlight: '<10 min setup',
   },
   {
     icon: Shield,
-    title: 'AI Security',
-    desc: 'Protect your business with AI-powered security solutions that detect and prevent threats in real-time.',
-    bullets: ['Threat Detection', 'Data Protection', 'Compliance'],
+    title: 'Competitive Edge',
+    desc: 'Most stores still use basic search. AI-powered assistance sets you apart from every competitor.',
+    highlight: 'First-mover',
   },
 ];
 
-/* ── "Why Choose" benefits (matches Figma grid) ── */
-const benefits = [
-  { icon: TrendingUp, title: 'Exponential Growth', desc: 'Scale your business operations without proportionally increasing costs or complexity.', stat: '300% Average ROI' },
-  { icon: Clock, title: 'Time Savings', desc: 'Automate repetitive tasks and free up your team to focus on strategic initiatives.', stat: '40+ Hours/Week Saved' },
-  { icon: DollarSign, title: 'Cost Reduction', desc: 'Reduce operational costs while improving efficiency and output quality.', stat: '60% Cost Reduction' },
-  { icon: Users, title: 'Better Customer Experience', desc: 'Provide personalized, 24/7 customer service that delights and retains customers.', stat: '95% Satisfaction Rate' },
-  { icon: Target, title: 'Data-Driven Decisions', desc: 'Make informed decisions based on AI-powered insights and predictive analytics.', stat: '85% Accuracy Improvement' },
-  { icon: ShieldCheck, title: 'Competitive Advantage', desc: 'Stay ahead of the competition with cutting-edge AI technology and innovation.', stat: '2x Faster Implementation' },
-];
-
-/* ── Pricing (matches Figma "Choose Your AI Journey") ── */
-const plans = [
+/* ── Testimonials ── */
+const testimonials = [
   {
-    badge: '🖥 Perfect Start',
-    name: 'AI Strategy Consultation',
-    desc: 'Expert guidance to discover and plan your AI transformation journey',
-    price: '$0',
-    priceSuffix: 'forever',
-    features: [
-      '25 AI queries / month',
-      'Single store integration',
-      'Basic analytics dashboard',
-      'Community support',
-      'Widget embedding',
-    ],
-    cta: 'Get Started Free',
-    popular: false,
+    name: 'Priya Sharma',
+    role: 'Founder, FreshBasket',
+    quote: 'Our average cart size went up 40%. Customers describe what they need and the AI handles the rest.',
   },
   {
-    badge: '🚀 Full Solution',
-    name: 'Complete AI Automation',
-    desc: 'Full-scale AI implementation to automate and scale your business operations',
-    price: '$29',
-    priceSuffix: '/month',
-    features: [
-      'Unlimited AI queries',
-      'Priority response speed',
-      'Advanced analytics & insights',
-      'Custom widget branding',
-      'API access',
-      'Priority support',
-      'Multiple store support',
-    ],
-    cta: 'Upgrade to Pro',
-    popular: true,
+    name: 'Rahul Mehra',
+    role: 'CTO, StyleStreet',
+    quote: 'Integration took under 10 minutes. The component suggestions are incredibly accurate.',
+  },
+  {
+    name: 'Ankit Patel',
+    role: 'CEO, TechBazaar',
+    quote: 'Support tickets dropped 60%. Customers get instant recommendations instead of waiting.',
   },
 ];
 
 export default function LandingPage() {
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const nextSlide = useCallback(() => {
+    setActiveSlide((prev) => (prev + 1) % slideshowStates.length);
+  }, []);
+
+  const prevSlide = useCallback(() => {
+    setActiveSlide((prev) => (prev - 1 + slideshowStates.length) % slideshowStates.length);
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(nextSlide, 5000);
+    return () => clearInterval(timer);
+  }, [nextSlide]);
+
   return (
-    <div className="min-h-screen bg-surface-950 text-white overflow-x-hidden">
+    <div className="min-h-screen bg-white">
+      <Navbar />
 
-      {/* ══════════════════════════════════════════
-          NAVIGATION — clean dark bar, teal CTA
-          ══════════════════════════════════════════ */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-surface-600/30 bg-surface-950/90 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-accent/15 flex items-center justify-center">
-              <Zap className="w-4 h-4 text-accent" />
-            </div>
-            <span className="font-bold text-lg tracking-tight text-accent">ElectroAI</span>
-          </Link>
+      {/* ════════════════ HERO ════════════════ */}
+      <section className="relative pt-28 pb-10 md:pt-36 md:pb-16 overflow-hidden">
+        {/* Subtle gradient background */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: 'linear-gradient(180deg, rgba(91,110,255,0.15) 0%, rgba(91,110,255,0.08) 40%, rgba(255,255,255,1) 70%)',
+        }} />
 
-          <div className="hidden md:flex items-center gap-8 text-sm text-surface-400 font-medium">
-            <a href="#services" className="hover:text-white transition-colors">Services</a>
-            <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
-            <a href="#benefits" className="hover:text-white transition-colors">Benefits</a>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Link to="/login">
-              <Button variant="ghost" size="sm">Log in</Button>
-            </Link>
-            <Link to="/register">
-              <Button size="sm">Get Started</Button>
-            </Link>
-          </div>
-        </div>
-      </nav>
-
-      {/* ══════════════════════════════════════════
-          HERO — matches Figma "jade cobra" hero
-          ══════════════════════════════════════════ */}
-      <section className="relative pt-36 pb-20 md:pt-44 md:pb-28">
-        {/* Bg glow — green radial */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full bg-accent/[0.06] blur-[150px]" />
-          <div className="absolute top-1/3 right-1/4 w-[300px] h-[300px] rounded-full bg-emerald-600/[0.04] blur-[100px]" />
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
+        <div className="relative max-w-6xl mx-auto px-6 text-center">
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.35 }}
+            className="text-[13px] font-bold text-[#5B6EFF] tracking-widest uppercase mb-5"
           >
-            <Badge variant="brand" className="mb-8">
-              <Bot className="w-3 h-3" /> AI-Powered Business Transformation
-            </Badge>
-          </motion.div>
+            AI-Powered Product Assistant
+          </motion.p>
 
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.08] mb-6"
+            transition={{ duration: 0.4, delay: 0.05 }}
+            className="text-[46px] md:text-[60px] lg:text-[68px] font-extrabold tracking-[-0.04em] leading-[1.05] text-[#0F172A] mb-6 max-w-3xl mx-auto"
           >
-            Transform Your Business with
-            <br />
-            <GradientText>Intelligent AI</GradientText>
+            Build what you need, smarter with&nbsp;AI
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-base md:text-lg text-surface-400 max-w-2xl mx-auto mb-10 leading-relaxed"
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="text-[17px] text-[#475569] max-w-xl mx-auto mb-10 leading-[1.7]"
           >
-            From strategic AI consultation to complete automation implementation.
-            Unlock exponential growth with cutting-edge AI solutions designed for
-            everyday businesses ready to scale intelligently.
+            Describe your project. Get the exact components. Add what you need — one item at a time.
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+            transition={{ duration: 0.4, delay: 0.15 }}
+            className="flex items-center justify-center gap-3"
           >
             <Link to="/register">
-              <Button size="lg">
-                Book AI Consultation <ArrowRight className="w-4 h-4" />
-              </Button>
+              <button className="h-10 px-6 text-[14px] font-semibold text-white bg-[#5B6EFF] hover:bg-[#3F51D1] rounded-[5px] transition-all hover:shadow-lg hover:shadow-[#5B6EFF]/15 flex items-center gap-2">
+                Get Started <ArrowRight className="w-4 h-4" />
+              </button>
             </Link>
-            <a href="#services">
-              <Button variant="secondary" size="lg">
-                <MessageSquare className="w-4 h-4" /> Try AI Chat
-              </Button>
+            <a href="#demo">
+              <button className="h-10 px-6 text-[14px] font-semibold text-[#475569] hover:text-[#0F172A] border border-gray-200 hover:border-gray-300 rounded-[5px] transition-all">
+                See Demo
+              </button>
             </a>
           </motion.div>
+        </div>
+      </section>
 
-          {/* ── Stats row (from Figma) ── */}
+      {/* ════════════════ PRODUCT DEMO — Slideshow ════════════════ */}
+      <section id="demo" className="pb-12 md:pb-16">
+        <div className="max-w-3xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="flex flex-wrap items-center justify-center gap-12 md:gap-20"
+            transition={{ duration: 0.5, delay: 0.2 }}
           >
-            {[
-              { icon: TrendingUp, value: '300%', label: 'Average ROI Increase' },
-              { icon: Zap, value: '40+', label: 'Hours Saved Weekly' },
-              { icon: Bot, value: '24/7', label: 'AI Operations' },
-            ].map((stat, i) => (
-              <div key={i} className="flex flex-col items-center gap-1.5">
-                <div className="flex items-center gap-2">
-                  <stat.icon className="w-4 h-4 text-accent/70" />
-                  <span className="text-2xl md:text-3xl font-bold text-accent">{stat.value}</span>
-                </div>
-                <span className="text-xs text-surface-400 font-medium">{stat.label}</span>
+            <div className="border border-gray-200 rounded-[5px] overflow-hidden bg-white shadow-sm">
+              {/* Slide tabs */}
+              <div className="flex border-b border-gray-100">
+                {slideshowStates.map((state, i) => (
+                  <button
+                    key={state.id}
+                    onClick={() => setActiveSlide(i)}
+                    className={`flex-1 py-3 text-[12px] font-semibold transition-colors ${activeSlide === i
+                      ? 'text-[#5B6EFF] border-b-2 border-[#5B6EFF] bg-[#5B6EFF]/[0.03]'
+                      : 'text-[#94A3B8] hover:text-[#475569]'
+                      }`}
+                  >
+                    {state.label}
+                  </button>
+                ))}
               </div>
-            ))}
+
+              {/* Slide content */}
+              <div className="min-h-[340px] relative">
+                {slideshowStates[activeSlide].content}
+              </div>
+
+              {/* Navigation dots + arrows */}
+              <div className="flex items-center justify-between px-6 py-3 bg-[#F8FAFC]">
+                <button onClick={prevSlide} className="w-7 h-7 rounded-[3px] flex items-center justify-center text-[#94A3B8] hover:text-[#0F172A] hover:bg-white transition-colors">
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <div className="flex gap-1.5">
+                  {slideshowStates.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setActiveSlide(i)}
+                      className={`h-1.5 rounded-full transition-all ${activeSlide === i ? 'w-5 bg-[#5B6EFF]' : 'w-1.5 bg-[#CBD5E1]'
+                        }`}
+                    />
+                  ))}
+                </div>
+                <button onClick={nextSlide} className="w-7 h-7 rounded-[3px] flex items-center justify-center text-[#94A3B8] hover:text-[#0F172A] hover:bg-white transition-colors">
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════
-          SERVICES — matches Figma "AI Solutions for Every Business"
-          3×2 grid, dark cards, icon + title + desc + bullet list
-          ══════════════════════════════════════════ */}
-      <section id="services" className="py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-6">
+      {/* ════════════════ HOW IT WORKS ════════════════ */}
+      <section className="py-16 md:py-24">
+        <div className="max-w-6xl mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-3xl md:text-[42px] font-bold tracking-tight mb-5 leading-tight">
-              AI Solutions for <GradientText>Every Business</GradientText>
+            <p className="text-[13px] font-bold text-[#5B6EFF] tracking-widest uppercase mb-4">HOW IT WORKS</p>
+            <h2 className="text-[36px] md:text-[46px] font-bold tracking-[-0.025em] text-[#0F172A]">
+              Three steps to your next build
             </h2>
-            <p className="text-surface-400 max-w-2xl mx-auto leading-relaxed">
-              Discover our comprehensive suite of AI-powered tools designed to transform
-              your business operations and accelerate growth.
+          </AnimatedSection>
+
+          <div className="grid md:grid-cols-3 gap-16 md:gap-10 max-w-4xl mx-auto">
+            {[
+              { n: '01', title: 'Describe your need', desc: 'Tell the AI what you want to build — a robot, a smart home kit, or anything else.' },
+              { n: '02', title: 'AI suggests components', desc: 'Get an instant, curated list of exactly the parts you need with descriptions and prices.' },
+              { n: '03', title: 'Add items to your cart', desc: "Review each suggestion and add the ones you want. You're always in control." },
+            ].map((s, i) => (
+              <AnimatedSection key={s.n} delay={i * 0.08}>
+                <div className="bg-white border border-gray-100 rounded-[4px] p-7 h-full hover:border-gray-200 hover:shadow-sm transition-all">
+                  <span className="text-[11px] font-bold text-[#5B6EFF] tracking-widest bg-[#5B6EFF]/[0.06] px-2 py-0.5 rounded-[2px]">{s.n}</span>
+                  <h3 className="text-[16px] font-bold text-[#0F172A] mt-4 mb-2">{s.title}</h3>
+                  <p className="text-[13px] text-[#475569] leading-relaxed">{s.desc}</p>
+                </div>
+              </AnimatedSection>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════ HOW IT HELPS YOUR BUSINESS ════════════════ */}
+      <section className="py-16 md:py-24 bg-[#5B6EFF]/[0.02]">
+        <div className="max-w-6xl mx-auto px-6">
+          <AnimatedSection className="text-center mb-16">
+            <p className="text-[13px] font-bold text-[#5B6EFF] tracking-widest uppercase mb-4">
+              BUILT FOR ECOMMERCE GROWTH
             </p>
+            <h2 className="text-[36px] md:text-[46px] font-bold tracking-[-0.025em] text-[#0F172A]">
+              How it helps your business
+            </h2>
           </AnimatedSection>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {services.map((s, i) => (
-              <AnimatedSection key={s.title} delay={i * 0.06}>
-                <div className="group p-7 rounded-2xl bg-surface-800/60 border border-surface-600/30 hover:border-accent/15 hover:bg-surface-800/80 transition-all duration-300 h-full">
-                  {/* Icon container — teal bg like Figma */}
-                  <div className="w-11 h-11 rounded-xl bg-accent/10 border border-accent/15 flex items-center justify-center mb-5 group-hover:bg-accent/15 transition-colors">
-                    <s.icon className="w-5 h-5 text-accent" />
+            {businessCards.map((card, i) => (
+              <AnimatedSection key={card.title} delay={i * 0.05}>
+                <div className="bg-white border border-gray-100 rounded-[4px] p-7 h-full hover:border-gray-200 hover:shadow-sm transition-all group">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="w-9 h-9 rounded-[3px] bg-[#5B6EFF]/[0.07] flex items-center justify-center">
+                      <card.icon className="w-4 h-4 text-[#5B6EFF]" />
+                    </div>
+                    <span className="text-[11px] font-bold text-[#5B6EFF] tracking-wide bg-[#5B6EFF]/[0.06] px-2 py-0.5 rounded-[2px]">
+                      {card.highlight}
+                    </span>
                   </div>
-
-                  <h3 className="font-bold text-white text-lg mb-2.5">{s.title}</h3>
-                  <p className="text-sm text-surface-400 leading-relaxed mb-5">{s.desc}</p>
-
-                  {/* Bullet list — matches Figma dot list */}
-                  <ul className="space-y-2">
-                    {s.bullets.map((b) => (
-                      <li key={b} className="flex items-center gap-2.5 text-sm text-surface-300">
-                        <span className="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0" />
-                        {b}
-                      </li>
-                    ))}
-                  </ul>
+                  <h3 className="text-[16px] font-bold text-[#0F172A] mb-2">{card.title}</h3>
+                  <p className="text-[13px] text-[#475569] leading-relaxed">{card.desc}</p>
                 </div>
               </AnimatedSection>
             ))}
@@ -261,208 +379,32 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════
-          WHY CHOOSE — matches Figma "Why Choose AI Scale"
-          3×2 grid, centered icon + title + desc + stat badge
-          ══════════════════════════════════════════ */}
-      <section id="benefits" className="py-20 md:py-28 border-t border-surface-700/40">
-        <div className="max-w-7xl mx-auto px-6">
+      {/* ════════════════ TESTIMONIALS ════════════════ */}
+      <section className="py-16 md:py-24">
+        <div className="max-w-6xl mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-3xl md:text-[42px] font-bold tracking-tight mb-5 leading-tight">
-              Why Choose <GradientText>ElectroAI</GradientText>
+            <p className="text-[13px] font-bold text-[#5B6EFF] tracking-widest uppercase mb-4">TESTIMONIALS</p>
+            <h2 className="text-[36px] md:text-[46px] font-bold tracking-[-0.025em] text-[#0F172A]">
+              Trusted by ecommerce leaders
             </h2>
-            <p className="text-surface-400 max-w-2xl mx-auto leading-relaxed">
-              Join thousands of businesses that have transformed their operations and achieved
-              remarkable growth with our AI solutions.
-            </p>
           </AnimatedSection>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-            {benefits.map((b, i) => (
-              <AnimatedSection key={b.title} delay={i * 0.06}>
-                <div className="flex flex-col items-center text-center">
-                  {/* Icon — large rounded circle, teal bg */}
-                  <div className="w-14 h-14 rounded-2xl bg-accent/10 border border-accent/15 flex items-center justify-center mb-5">
-                    <b.icon className="w-6 h-6 text-accent" />
-                  </div>
-
-                  <h3 className="font-bold text-white text-lg mb-2.5">{b.title}</h3>
-                  <p className="text-sm text-surface-400 leading-relaxed mb-4 max-w-xs">{b.desc}</p>
-
-                  {/* Stat badge — green bg like Figma */}
-                  <span className="inline-block px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-bold tracking-wide">
-                    {b.stat}
-                  </span>
-                </div>
-              </AnimatedSection>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════
-          PRODUCT SHOWCASE — Electronics AI Agent
-          ══════════════════════════════════════════ */}
-      <section className="py-20 md:py-28 border-t border-surface-700/40">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            <AnimatedSection>
-              <Badge variant="brand" className="mb-5">
-                <Bot className="w-3 h-3" /> Featured Product
-              </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-5">
-                Electronics AI Agent
-              </h2>
-              <p className="text-surface-400 mb-8 leading-relaxed">
-                An intelligent assistant that lives on your website. It understands electronics projects,
-                maps requirements to your inventory, and checks component compatibility — all automatically.
-              </p>
-              <div className="space-y-3 mb-8">
-                {[
-                  'Understands natural language project descriptions',
-                  'Maps generic needs to your exact inventory',
-                  'Real-time voltage & interface compatibility',
-                  'Shadow DOM — works on any website',
-                ].map((item) => (
-                  <div key={item} className="flex items-start gap-3">
-                    <div className="mt-0.5 w-5 h-5 rounded-full bg-accent/15 flex items-center justify-center flex-shrink-0">
-                      <Check className="w-3 h-3 text-accent" />
-                    </div>
-                    <span className="text-sm text-surface-300">{item}</span>
-                  </div>
-                ))}
-              </div>
-              <Link to="/register">
-                <Button>
-                  Try Electronics Agent <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-            </AnimatedSection>
-
-            {/* Chat widget preview */}
-            <AnimatedSection delay={0.1}>
-              <div className="rounded-2xl border border-surface-600/40 bg-surface-800/60 p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-accent/15 flex items-center justify-center">
-                      <Zap className="w-5 h-5 text-accent" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-sm">Project Assistant</h4>
-                      <p className="text-xs text-accent flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" /> Online
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-4 mb-4">
-                  <div className="flex justify-end">
-                    <div className="bg-accent/15 text-accent-50 px-4 py-2.5 rounded-2xl rounded-br-sm text-sm max-w-xs border border-accent/10">
-                      I need a weather monitoring station
-                    </div>
-                  </div>
-                  <div className="flex justify-start">
-                    <div className="bg-surface-700/70 border border-surface-600/40 px-4 py-3 rounded-2xl rounded-bl-sm text-sm text-surface-200 max-w-xs">
-                      I'd recommend these components for your weather station:
-                    </div>
-                  </div>
-                </div>
-                {/* Fake component cards */}
-                <div className="space-y-2">
-                  {[
-                    { name: 'BME280 Sensor', cat: 'Sensor', price: '$8.50', stock: '45' },
-                    { name: 'ESP32 DevKit', cat: 'Microcontroller', price: '$12.00', stock: '23' },
-                    { name: 'OLED Display 0.96"', cat: 'Display', price: '$6.75', stock: '31' },
-                  ].map((c) => (
-                    <div key={c.name} className="flex items-center justify-between p-3 rounded-xl bg-surface-900/60 border border-surface-600/30">
-                      <div>
-                        <div className="text-xs font-semibold text-white">{c.name}</div>
-                        <div className="text-[10px] text-surface-400">{c.cat}</div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-xs font-bold text-accent">{c.price}</div>
-                        <div className="text-[10px] text-surface-500">{c.stock} in stock</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </AnimatedSection>
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════
-          PRICING — matches Figma "Choose Your AI Journey"
-          Large teal price numbers, structured cards
-          ══════════════════════════════════════════ */}
-      <section id="pricing" className="py-20 md:py-28 border-t border-surface-700/40">
-        <div className="max-w-7xl mx-auto px-6">
-          <AnimatedSection className="text-center mb-4">
-            <Badge variant="brand" className="mb-5">
-              <Sparkles className="w-3 h-3" /> AI-Powered Solutions
-            </Badge>
-          </AnimatedSection>
-          <AnimatedSection className="text-center mb-14">
-            <h2 className="text-3xl md:text-[42px] font-bold tracking-tight mb-5 leading-tight">
-              Choose Your <GradientText>AI Journey</GradientText>
-            </h2>
-            <p className="text-surface-400 max-w-2xl mx-auto leading-relaxed">
-              Whether you need strategic guidance or full AI implementation, we have the perfect
-              solution to transform your business with intelligent automation.
-            </p>
-          </AnimatedSection>
-
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {plans.map((plan, i) => (
-              <AnimatedSection key={plan.name} delay={i * 0.1}>
-                <div
-                  className={`relative p-8 rounded-2xl border h-full flex flex-col ${
-                    plan.popular
-                      ? 'border-accent/25 bg-surface-800/80 shadow-[0_0_40px_rgba(0,217,166,0.06)]'
-                      : 'border-surface-600/40 bg-surface-800/50'
-                  }`}
-                >
-                  {/* Badge */}
-                  <div className="mb-6">
-                    <Badge variant={plan.popular ? 'brand' : 'neutral'}>{plan.badge}</Badge>
-                  </div>
-
-                  {/* Icon */}
-                  <div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/15 flex items-center justify-center mb-5">
-                    {plan.popular ? (
-                      <Bot className="w-5 h-5 text-accent" />
-                    ) : (
-                      <MessageSquare className="w-5 h-5 text-accent" />
-                    )}
-                  </div>
-
-                  <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
-                  <p className="text-sm text-surface-400 mb-6 leading-relaxed">{plan.desc}</p>
-
-                  {/* Large price — teal like Figma */}
-                  <div className="mb-6">
-                    <span className="text-4xl md:text-5xl font-extrabold text-accent">{plan.price}</span>
-                    <span className="text-surface-400 text-sm ml-2">{plan.priceSuffix}</span>
-                  </div>
-
-                  <ul className="space-y-3 mb-8 flex-1">
-                    {plan.features.map((f) => (
-                      <li key={f} className="flex items-center gap-2.5 text-sm text-surface-300">
-                        <Check className="w-4 h-4 text-accent flex-shrink-0" />
-                        {f}
-                      </li>
+          <div className="grid md:grid-cols-3 gap-5">
+            {testimonials.map((t, i) => (
+              <AnimatedSection key={t.name} delay={i * 0.06}>
+                <div className="bg-white border border-gray-100 rounded-[4px] p-7 h-full hover:border-gray-200 hover:shadow-sm transition-all">
+                  <div className="flex gap-0.5 mb-5">
+                    {Array.from({ length: 5 }).map((_, j) => (
+                      <Star key={j} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                     ))}
-                  </ul>
-
-                  <Link to="/register">
-                    <Button
-                      variant={plan.popular ? 'primary' : 'secondary'}
-                      className="w-full"
-                    >
-                      {plan.cta}
-                    </Button>
-                  </Link>
+                  </div>
+                  <p className="text-[14px] text-[#334155] leading-[1.75] mb-6">
+                    &ldquo;{t.quote}&rdquo;
+                  </p>
+                  <div>
+                    <p className="text-[13px] font-bold text-[#0F172A]">{t.name}</p>
+                    <p className="text-[12px] text-[#94A3B8]">{t.role}</p>
+                  </div>
                 </div>
               </AnimatedSection>
             ))}
@@ -470,57 +412,27 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════
-          CTA
-          ══════════════════════════════════════════ */}
-      <section className="py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-6">
+      {/* ════════════════ CUSTOM AI ════════════════ */}
+      <section className="py-16 md:py-24 bg-[#5B6EFF]/[0.02]">
+        <div className="max-w-xl mx-auto px-6 text-center">
           <AnimatedSection>
-            <div className="relative rounded-3xl border border-surface-600/30 bg-surface-800/50 p-12 md:p-16 text-center overflow-hidden">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] rounded-full bg-accent/[0.06] blur-[120px]" />
-              </div>
-              <div className="relative">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                  Ready to scale intelligently?
-                </h2>
-                <p className="text-surface-400 mb-8 max-w-md mx-auto">
-                  Join electronics stores already using AI to help customers find the right components.
-                </p>
-                <Link to="/register">
-                  <Button size="lg">
-                    Get Started Free <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
+            <p className="text-[13px] font-bold text-[#5B6EFF] tracking-widest uppercase mb-4">CUSTOM SOLUTIONS</p>
+            <h2 className="text-[32px] md:text-[40px] font-bold tracking-[-0.025em] text-[#0F172A] mb-4">
+              Need a custom AI for your&nbsp;store?
+            </h2>
+            <p className="text-[#475569] mb-8 text-[15px] leading-relaxed">
+              Every business is different. Tell us what you need and we&rsquo;ll build a tailored assistant for your catalog.
+            </p>
+            <Link to="/contact">
+              <button className="h-10 px-6 text-[14px] font-semibold text-[#475569] hover:text-[#0F172A] border border-gray-200 hover:border-gray-300 rounded-[5px] transition-all inline-flex items-center gap-2">
+                <Sparkles className="w-4 h-4" /> Request Custom AI
+              </button>
+            </Link>
           </AnimatedSection>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════
-          FOOTER
-          ══════════════════════════════════════════ */}
-      <footer className="border-t border-surface-700/30 py-12">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-accent/15 flex items-center justify-center">
-                <Zap className="w-3.5 h-3.5 text-accent" />
-              </div>
-              <span className="font-bold text-sm text-accent">ElectroAI</span>
-            </div>
-            <div className="flex items-center gap-6 text-sm text-surface-400">
-              <a href="#services" className="hover:text-white transition-colors">Services</a>
-              <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
-              <Link to="/login" className="hover:text-white transition-colors">Dashboard</Link>
-            </div>
-            <p className="text-xs text-surface-500">
-              © 2026 ElectroAI. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

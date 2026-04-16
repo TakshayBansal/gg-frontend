@@ -17,14 +17,14 @@ export default function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-surface-950 flex">
-      <aside className="w-64 bg-surface-900/95 border-r border-surface-700/40 flex flex-col">
-        <div className="p-6 border-b border-surface-700/40 flex items-center gap-3">
+      <aside className="w-64 bg-surface-900 border-r border-surface-800 flex flex-col">
+        <div className="p-6 border-b border-surface-800 flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/15 flex items-center justify-center">
             <Shield className="w-5 h-5 text-red-400" />
           </div>
           <div>
             <h1 className="font-bold text-white leading-tight">Admin Panel</h1>
-            <p className="text-xs text-surface-500">GenuineGigs</p>
+            <img src="/assets/name.svg" alt="GenuineGig" className="h-2.5 mt-0.5 brightness-0 invert opacity-50" />
           </div>
         </div>
 
@@ -38,7 +38,7 @@ export default function AdminLayout() {
                 `flex items-center gap-3 px-4 py-3 rounded-xl transition-all group
                 ${isActive
                   ? 'bg-red-500/10 text-red-400 border border-red-500/15'
-                  : 'text-surface-400 hover:text-white hover:bg-surface-700/40 border border-transparent'}`
+                  : 'text-surface-400 hover:text-white hover:bg-surface-800 border border-transparent'}`
               }
             >
               <Icon className="w-5 h-5" />
@@ -48,7 +48,7 @@ export default function AdminLayout() {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-surface-700/40">
+        <div className="p-4 border-t border-surface-800">
           <button
             onClick={logout}
             className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-surface-400 hover:text-red-400 hover:bg-red-500/5 transition-all"

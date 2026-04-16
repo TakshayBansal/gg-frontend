@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { authAPI } from '../api';
 import {
-  Zap, LayoutDashboard, Package, MessageSquare, Settings,
+  LayoutDashboard, Package, MessageSquare, Settings,
   LogOut, Menu, X, ChevronRight, Bot, Layers, Link2, BookOpen
 } from 'lucide-react';
 
@@ -43,19 +43,19 @@ export default function DashboardLayout() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-surface-900/95 backdrop-blur-xl border-r border-surface-700/40 
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-surface-900 backdrop-blur-xl border-r border-surface-800 
           transform transition-transform duration-300 lg:translate-x-0 
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="p-6 border-b border-surface-700/40">
+          <div className="p-6 border-b border-surface-800">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-accent/10 border border-accent/15 flex items-center justify-center">
-                <Zap className="w-5 h-5 text-accent" />
-              </div>
+              <img src="/assets/logo.svg" alt="GenuineGig Logo" className="h-8 w-auto brightness-150" />
               <div>
-                <h1 className="font-bold text-white text-lg leading-tight">GenuineGigs</h1>
+                <h1 className="font-bold text-white text-lg leading-tight flex items-center">
+                  <img src="/assets/name.svg" alt="GenuineGig" className="h-[15px] brightness-0 invert" />
+                </h1>
                 <p className="text-xs text-surface-400">AI Dashboard</p>
               </div>
             </div>
@@ -72,8 +72,8 @@ export default function DashboardLayout() {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-4 py-3 rounded-xl transition-all group
                   ${isActive
-                    ? 'bg-accent/10 text-accent border border-accent/15'
-                    : 'text-surface-400 hover:text-white hover:bg-surface-700/40 border border-transparent'}`
+                    ? 'bg-primary-400/15 text-primary-300 border border-primary-400/20'
+                    : 'text-surface-400 hover:text-white hover:bg-surface-800 border border-transparent'}`
                 }
               >
                 <Icon className="w-5 h-5" />
@@ -84,10 +84,10 @@ export default function DashboardLayout() {
           </nav>
 
           {/* User section */}
-          <div className="p-4 border-t border-surface-700/40">
+          <div className="p-4 border-t border-surface-800">
             {user && (
-              <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-surface-800/60 border border-surface-700/30 mb-3">
-                <div className="w-9 h-9 rounded-lg bg-accent/15 flex items-center justify-center text-accent font-bold text-sm">
+              <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-surface-800 border border-surface-700 mb-3">
+                <div className="w-9 h-9 rounded-lg bg-primary-400/20 flex items-center justify-center text-primary-300 font-bold text-sm">
                   {user.email?.[0]?.toUpperCase() || 'U'}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -110,15 +110,15 @@ export default function DashboardLayout() {
       {/* Main content */}
       <main className="flex-1 min-h-screen">
         {/* Mobile header */}
-        <header className="lg:hidden flex items-center justify-between p-4 border-b border-surface-700/40 bg-surface-900/80 backdrop-blur-xl">
+        <header className="lg:hidden flex items-center justify-between p-4 border-b border-surface-800 bg-surface-900">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-lg hover:bg-surface-700/40 text-white"
+            className="p-2 rounded-lg hover:bg-surface-800 text-white"
           >
             <Menu className="w-6 h-6" />
           </button>
           <div className="flex items-center gap-2">
-            <Zap className="w-5 h-5 text-accent" />
+            <img src="/assets/logo.svg" alt="GenuineGig" className="h-6 w-auto brightness-150" />
             <span className="font-bold text-white">Dashboard</span>
           </div>
           <div className="w-10" />

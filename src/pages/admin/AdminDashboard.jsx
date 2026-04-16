@@ -36,7 +36,9 @@ export default function AdminDashboard() {
     <div className="space-y-8 max-w-7xl">
       <motion.div {...fadeUp} transition={{ duration: 0.4 }}>
         <h1 className="text-2xl font-bold mb-1">Platform Overview</h1>
-        <p className="text-surface-400 text-sm">GenuineGigs admin dashboard</p>
+        <p className="text-surface-400 text-sm flex items-center gap-1.5">
+          <img src="/assets/name.svg" alt="GenuineGig" className="h-[11px] brightness-0 invert opacity-60" /> admin dashboard
+        </p>
       </motion.div>
 
       {loading ? (

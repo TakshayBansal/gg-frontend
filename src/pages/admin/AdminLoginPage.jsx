@@ -36,10 +36,12 @@ export default function AdminLoginPage() {
             <Shield className="w-7 h-7 text-red-400" />
           </div>
           <h1 className="text-3xl font-bold text-white">Admin Panel</h1>
-          <p className="text-surface-400 mt-2 text-sm">GenuineGigs Platform Administration</p>
+          <p className="text-surface-400 mt-2 text-sm flex items-center justify-center gap-1.5">
+            <img src="/assets/name.svg" alt="GenuineGig" className="h-[11px] brightness-0 invert opacity-60" /> Platform Administration
+          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="glass-strong rounded-2xl p-8 space-y-5">
+        <form onSubmit={handleSubmit} className="bg-surface-900 border border-surface-800 rounded-2xl p-8 space-y-5">
           {error && (
             <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl text-sm">
               {error}
@@ -54,7 +56,7 @@ export default function AdminLoginPage() {
                 type="email"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full pl-11 pr-4 py-3 bg-surface-800/60 border border-surface-600/40 rounded-xl text-white text-sm placeholder-surface-500 focus:border-red-500/30 focus:ring-2 focus:ring-red-500/10 transition-all outline-none"
+                className="w-full pl-11 pr-4 py-3 bg-surface-800 border border-surface-700 rounded-xl text-white text-sm placeholder-surface-500 focus:border-red-500/30 focus:ring-2 focus:ring-red-500/10 transition-all outline-none"
               />
             </div>
           </div>
@@ -67,7 +69,7 @@ export default function AdminLoginPage() {
                 type="password"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="w-full pl-11 pr-4 py-3 bg-surface-800/60 border border-surface-600/40 rounded-xl text-white text-sm placeholder-surface-500 focus:border-red-500/30 focus:ring-2 focus:ring-red-500/10 transition-all outline-none"
+                className="w-full pl-11 pr-4 py-3 bg-surface-800 border border-surface-700 rounded-xl text-white text-sm placeholder-surface-500 focus:border-red-500/30 focus:ring-2 focus:ring-red-500/10 transition-all outline-none"
               />
             </div>
           </div>

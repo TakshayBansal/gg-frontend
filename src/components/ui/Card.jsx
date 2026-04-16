@@ -1,10 +1,9 @@
-export default function Card({ className = '', children, hover = false, glow = false, ...props }) {
+export default function Card({ className = '', children, hover = false, ...props }) {
   return (
     <div
       className={`
-        bg-surface-700/50 border border-surface-600/40 rounded-2xl
-        ${hover ? 'hover:bg-surface-700/70 hover:border-accent/15 transition-all duration-300 cursor-pointer' : ''}
-        ${glow ? 'shadow-[0_0_30px_rgba(0,217,166,0.04)]' : ''}
+        bg-white rounded-lg
+        ${hover ? 'hover:bg-surface-100/50 transition-colors cursor-pointer' : ''}
         ${className}
       `}
       {...props}
@@ -15,17 +14,9 @@ export default function Card({ className = '', children, hover = false, glow = f
 }
 
 export function CardHeader({ className = '', children }) {
-  return (
-    <div className={`p-6 pb-0 ${className}`}>
-      {children}
-    </div>
-  );
+  return <div className={`p-5 pb-0 ${className}`}>{children}</div>;
 }
 
 export function CardContent({ className = '', children }) {
-  return (
-    <div className={`p-6 ${className}`}>
-      {children}
-    </div>
-  );
+  return <div className={`p-5 ${className}`}>{children}</div>;
 }

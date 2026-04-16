@@ -6,7 +6,6 @@ import {
 } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
-import Card, { CardContent } from '../../components/ui/Card';
 import { chatAPI, integrationAPI } from '../../api';
 
 export default function ElectronicsAgentPage() {
@@ -155,7 +154,7 @@ export default function ElectronicsAgentPage() {
           <Badge variant="green" className="mb-2">
             <Bot className="w-3 h-3" /> Live
           </Badge>
-          <h1 className="text-2xl font-bold tracking-tight">Electronics AI Agent</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-white">Electronics AI Agent</h1>
           <p className="text-sm text-surface-400 mt-1">
             Describe a project and get component recommendations from your inventory.
           </p>
@@ -168,7 +167,7 @@ export default function ElectronicsAgentPage() {
             <div
               className={`px-4 py-3 rounded-xl text-sm border ${
                 cartNotice.type === 'success'
-                  ? 'bg-accent/10 border-accent/25 text-accent'
+                  ? 'bg-emerald-500/10 border-emerald-500/25 text-emerald-400'
                   : 'bg-red-500/10 border-red-500/25 text-red-300'
               }`}
             >
@@ -179,16 +178,16 @@ export default function ElectronicsAgentPage() {
 
         {/* Chat Panel */}
         <div className="lg:col-span-3">
-          <Card className="flex flex-col h-[600px]">
+          <div className="bg-surface-800 border border-surface-700 rounded-2xl flex flex-col h-[600px]">
             {/* Chat header */}
-            <div className="flex items-center gap-3 p-4 border-b border-surface-600/30">
-              <div className="w-9 h-9 rounded-xl bg-accent/10 border border-accent/15 flex items-center justify-center">
-                <Bot className="w-4 h-4 text-accent" />
+            <div className="flex items-center gap-3 p-4 border-b border-surface-700">
+              <div className="w-9 h-9 rounded-xl bg-primary-400/10 border border-primary-400/20 flex items-center justify-center">
+                <Bot className="w-4 h-4 text-primary-400" />
               </div>
               <div>
-                <h3 className="text-sm font-semibold">Project Assistant</h3>
-                <p className="text-xs text-accent flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" /> Online
+                <h3 className="text-sm font-semibold text-white">Project Assistant</h3>
+                <p className="text-xs text-emerald-400 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Online
                 </p>
               </div>
             </div>
@@ -197,8 +196,8 @@ export default function ElectronicsAgentPage() {
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.length === 0 && (
                 <div className="flex flex-col items-center justify-center h-full text-center">
-                  <div className="w-16 h-16 rounded-2xl bg-accent/10 border border-accent/15 flex items-center justify-center mb-4">
-                    <Sparkles className="w-7 h-7 text-accent" />
+                  <div className="w-16 h-16 rounded-2xl bg-primary-400/10 border border-primary-400/20 flex items-center justify-center mb-4">
+                    <Sparkles className="w-7 h-7 text-primary-400" />
                   </div>
                   <h4 className="font-semibold text-white mb-2">What are you building?</h4>
                   <p className="text-sm text-surface-400 max-w-xs mb-6">
@@ -209,7 +208,7 @@ export default function ElectronicsAgentPage() {
                       <button
                         key={chip}
                         onClick={() => sendMessage(`I want to build a ${chip.toLowerCase()}`)}
-                        className="px-3.5 py-2 rounded-xl bg-surface-800/60 border border-surface-600/30 text-xs text-surface-300 hover:bg-accent/10 hover:border-accent/20 hover:text-accent transition-all"
+                        className="px-3.5 py-2 rounded-xl bg-surface-700 border border-surface-600 text-xs text-surface-300 hover:bg-primary-400/10 hover:border-primary-400/20 hover:text-primary-300 transition-all"
                       >
                         {chip}
                       </button>
@@ -227,18 +226,18 @@ export default function ElectronicsAgentPage() {
                     transition={{ duration: 0.25 }}
                     className={`flex gap-2.5 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
                   >
-                    <div className="w-7 h-7 rounded-lg flex-shrink-0 flex items-center justify-center bg-surface-700/50 border border-surface-600/30 mt-0.5">
+                    <div className="w-7 h-7 rounded-lg flex-shrink-0 flex items-center justify-center bg-surface-700 border border-surface-600 mt-0.5">
                       {msg.role === 'user' ? (
                         <User className="w-3.5 h-3.5 text-surface-400" />
                       ) : (
-                        <Zap className="w-3.5 h-3.5 text-accent" />
+                        <Zap className="w-3.5 h-3.5 text-primary-400" />
                       )}
                     </div>
                     <div
                       className={`max-w-[80%] px-4 py-3 text-sm leading-relaxed ${
                         msg.role === 'user'
-                          ? 'bg-accent/15 text-white border border-accent/10 rounded-2xl rounded-br-sm'
-                          : 'bg-surface-700/50 border border-surface-600/30 text-surface-200 rounded-2xl rounded-bl-sm'
+                          ? 'bg-primary-400/20 text-white border border-primary-400/15 rounded-2xl rounded-br-sm'
+                          : 'bg-surface-700 border border-surface-600 text-surface-200 rounded-2xl rounded-bl-sm'
                       }`}
                     >
                       <p className="whitespace-pre-wrap">{msg.content}</p>
@@ -247,13 +246,13 @@ export default function ElectronicsAgentPage() {
                         <div className="mt-3 space-y-1.5">
                           <p className="text-xs font-semibold text-surface-400 uppercase tracking-wider">✅ Available</p>
                           {msg.available.map((c, j) => (
-                            <div key={j} className="flex items-center justify-between p-2.5 rounded-lg bg-surface-900/50 border border-surface-600/20">
+                            <div key={j} className="flex items-center justify-between p-2.5 rounded-lg bg-surface-900/60 border border-surface-700">
                               <div>
                                 <div className="text-xs font-semibold text-white">{c.name}</div>
                                 <div className="text-[10px] text-surface-400">{c.category}</div>
                               </div>
                               <div className="text-right">
-                                {c.price && <div className="text-xs font-bold text-accent">${c.price.toFixed(2)}</div>}
+                                {c.price && <div className="text-xs font-bold text-primary-400">${c.price.toFixed(2)}</div>}
                                 {c.stock && <div className="text-[10px] text-surface-500">{c.stock} in stock</div>}
                                 <div className="mt-1.5 flex items-center justify-end gap-1.5">
                                   {c.product_url && (
@@ -261,7 +260,7 @@ export default function ElectronicsAgentPage() {
                                       href={c.product_url}
                                       target="_blank"
                                       rel="noreferrer"
-                                      className="inline-flex items-center gap-1 rounded-md border border-surface-500/30 px-2 py-1 text-[10px] text-surface-300 hover:text-white hover:border-surface-400/40"
+                                      className="inline-flex items-center gap-1 rounded-md border border-surface-600 px-2 py-1 text-[10px] text-surface-300 hover:text-white hover:border-surface-500"
                                     >
                                       <ExternalLink className="w-3 h-3" /> View
                                     </a>
@@ -270,7 +269,7 @@ export default function ElectronicsAgentPage() {
                                     type="button"
                                     onClick={() => addSingleToCart(c)}
                                     disabled={!c.id || cartLoadingId === c.id}
-                                    className="inline-flex items-center gap-1 rounded-md border border-accent/30 px-2 py-1 text-[10px] text-accent hover:bg-accent/10 disabled:opacity-50"
+                                    className="inline-flex items-center gap-1 rounded-md border border-primary-400/30 px-2 py-1 text-[10px] text-primary-400 hover:bg-primary-400/10 disabled:opacity-50"
                                   >
                                     <ShoppingCart className="w-3 h-3" />
                                     {cartLoadingId === c.id ? 'Adding...' : 'Add'}
@@ -293,14 +292,14 @@ export default function ElectronicsAgentPage() {
 
                       {msg.customer_view && (
                         <div className="mt-3 space-y-3">
-                          <div className="p-3 rounded-xl border border-accent/20 bg-accent/10">
+                          <div className="p-3 rounded-xl border border-primary-400/20 bg-primary-400/10">
                             <div className="flex items-center justify-between gap-2 mb-2">
-                              <h4 className="text-xs font-bold text-accent">{msg.customer_view.title || 'Recommended Setup'}</h4>
+                              <h4 className="text-xs font-bold text-primary-300">{msg.customer_view.title || 'Recommended Setup'}</h4>
                               <div className="flex items-center gap-2">
                                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-surface-300">
                                   {msg.customer_view.status || 'READY_TO_BUILD'}
                                 </span>
-                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-accent/15 text-accent">
+                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary-400/15 text-primary-300">
                                   {msg.customer_view.confidence || 'HIGH'} confidence
                                 </span>
                               </div>
@@ -309,7 +308,7 @@ export default function ElectronicsAgentPage() {
                               {msg.customer_view.summary || 'This setup is ready to build.'}
                             </p>
                             {msg.customer_view.confidence_message && (
-                              <p className="text-[11px] text-accent mb-1">{msg.customer_view.confidence_message}</p>
+                              <p className="text-[11px] text-primary-300 mb-1">{msg.customer_view.confidence_message}</p>
                             )}
                             {msg.customer_view.explanation_message && (
                               <p className="text-[11px] text-surface-300">{msg.customer_view.explanation_message}</p>
@@ -320,7 +319,7 @@ export default function ElectronicsAgentPage() {
                                 <p className="text-[10px] uppercase tracking-wider text-surface-400">Included solutions</p>
                                 {msg.customer_view.included_solutions.map((item, idx) => (
                                   <div key={idx} className="text-xs text-surface-200 flex items-start gap-1.5">
-                                    <span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-accent flex-shrink-0" />
+                                    <span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-primary-400 flex-shrink-0" />
                                     <span>{item}</span>
                                   </div>
                                 ))}
@@ -336,10 +335,10 @@ export default function ElectronicsAgentPage() {
                                   key={o_i}
                                   className={`p-3 rounded-xl border ${
                                     opt.title === 'Recommended Setup'
-                                      ? 'bg-accent/10 border-accent/20'
+                                      ? 'bg-primary-400/10 border-primary-400/20'
                                       : opt.title === 'Advanced Setup'
                                         ? 'bg-blue-500/10 border-blue-500/20'
-                                        : 'bg-surface-800/40 border-surface-600/30'
+                                        : 'bg-surface-800/40 border-surface-700'
                                   }`}
                                 >
                                   <div className="flex items-center justify-between mb-1">
@@ -373,7 +372,7 @@ export default function ElectronicsAgentPage() {
                           )}
 
                           {msg.internal_analysis && (
-                            <div className="rounded-xl border border-surface-600/30 bg-surface-800/40 overflow-hidden">
+                            <div className="rounded-xl border border-surface-700 bg-surface-800/40 overflow-hidden">
                               <button
                                 type="button"
                                 onClick={() => toggleTechnical(i)}
@@ -388,16 +387,16 @@ export default function ElectronicsAgentPage() {
                               </button>
 
                               {expandedTechnical[i] && (
-                                <div className="px-3 pb-3 pt-1 space-y-2 text-xs text-surface-300 border-t border-surface-600/20">
+                                <div className="px-3 pb-3 pt-1 space-y-2 text-xs text-surface-300 border-t border-surface-700">
                                   {msg.internal_analysis.summary && (
                                     <p className="text-surface-400">{msg.internal_analysis.summary}</p>
                                   )}
                                   {(msg.internal_analysis.filtered_constraints || []).length === 0 ? (
-                                    <p className="text-accent">No critical technical blockers detected.</p>
+                                    <p className="text-primary-400">No critical technical blockers detected.</p>
                                   ) : (
                                     <div className="space-y-1.5">
                                       {(msg.internal_analysis.filtered_constraints || []).map((item, idx) => (
-                                        <div key={idx} className="p-2 rounded-lg bg-surface-900/50 border border-surface-600/20">
+                                        <div key={idx} className="p-2 rounded-lg bg-surface-900/60 border border-surface-700">
                                           <p className="text-white text-[11px]">{item.type}</p>
                                           <p className="text-surface-400 text-[11px]">{item.description}</p>
                                         </div>
@@ -417,14 +416,14 @@ export default function ElectronicsAgentPage() {
 
               {loading && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-2.5">
-                  <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-surface-700/50 border border-surface-600/30">
-                    <Zap className="w-3.5 h-3.5 text-accent" />
+                  <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-surface-700 border border-surface-600">
+                    <Zap className="w-3.5 h-3.5 text-primary-400" />
                   </div>
-                  <div className="px-4 py-3 rounded-2xl rounded-bl-sm bg-surface-700/50 border border-surface-600/30">
+                  <div className="px-4 py-3 rounded-2xl rounded-bl-sm bg-surface-700 border border-surface-600">
                     <div className="flex gap-1.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-accent animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <div className="w-1.5 h-1.5 rounded-full bg-accent animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <div className="w-1.5 h-1.5 rounded-full bg-accent animate-bounce" style={{ animationDelay: '300ms' }} />
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary-400 animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary-400 animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary-400 animate-bounce" style={{ animationDelay: '300ms' }} />
                     </div>
                   </div>
                 </motion.div>
@@ -433,10 +432,10 @@ export default function ElectronicsAgentPage() {
             </div>
 
             {/* Input */}
-            <div className="p-4 border-t border-surface-600/30">
+            <div className="p-4 border-t border-surface-700">
               <form
                 onSubmit={(e) => { e.preventDefault(); sendMessage(input); }}
-                className="flex items-center gap-2 bg-surface-800/60 border border-surface-600/30 rounded-xl p-1 focus-within:border-accent/30 focus-within:ring-2 focus-within:ring-accent/5 transition-all"
+                className="flex items-center gap-2 bg-surface-700 border border-surface-600 rounded-xl p-1 focus-within:border-primary-400/30 focus-within:ring-2 focus-within:ring-primary-400/10 transition-all"
               >
                 <input
                   value={input}
@@ -450,111 +449,107 @@ export default function ElectronicsAgentPage() {
                 </Button>
               </form>
             </div>
-          </Card>
+          </div>
         </div>
 
         {/* Right Panel */}
         <div className="lg:col-span-2 space-y-5">
-          <Card>
-            <CardContent>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-sm flex items-center gap-2">
-                  <ShoppingCart className="w-4 h-4 text-accent" />
-                  Recommended Components
-                </h3>
-                <div className="flex items-center gap-2">
-                  {allComponents.length > 0 && (
-                    <Badge variant="brand">{allComponents.length}</Badge>
-                  )}
-                  {allComponents.length > 0 && (
-                    <Button
-                      size="sm"
-                      onClick={addAllToCart}
-                      disabled={bulkCartLoading}
-                      className="!py-1.5"
-                    >
-                      <ShoppingCart className="w-3.5 h-3.5" />
-                      {bulkCartLoading ? 'Adding...' : 'Add All'}
-                    </Button>
-                  )}
-                </div>
+          <div className="bg-surface-800 border border-surface-700 rounded-2xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-sm text-white flex items-center gap-2">
+                <ShoppingCart className="w-4 h-4 text-primary-400" />
+                Recommended Components
+              </h3>
+              <div className="flex items-center gap-2">
+                {allComponents.length > 0 && (
+                  <Badge variant="brand">{allComponents.length}</Badge>
+                )}
+                {allComponents.length > 0 && (
+                  <Button
+                    size="sm"
+                    onClick={addAllToCart}
+                    disabled={bulkCartLoading}
+                    className="!py-1.5"
+                  >
+                    <ShoppingCart className="w-3.5 h-3.5" />
+                    {bulkCartLoading ? 'Adding...' : 'Add All'}
+                  </Button>
+                )}
               </div>
-              {allComponents.length === 0 ? (
-                <p className="text-xs text-surface-500 text-center py-8">
-                  Start a conversation to see recommendations here.
-                </p>
-              ) : (
-                <div className="space-y-2 max-h-[320px] overflow-y-auto">
-                  {allComponents.map((c, i) => (
-                    <div key={i} className="p-3 rounded-xl bg-surface-900/50 border border-surface-600/20 hover:border-accent/15 transition-colors">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="text-sm font-medium text-white">{c.name}</div>
-                          <div className="text-xs text-surface-400">{c.category}</div>
-                        </div>
-                        <div className="text-right">
-                          {c.price && <div className="text-sm font-bold text-accent">${c.price.toFixed(2)}</div>}
-                          {c.stock && <div className="text-[10px] text-surface-500">{c.stock} in stock</div>}
-                        </div>
+            </div>
+            {allComponents.length === 0 ? (
+              <p className="text-xs text-surface-500 text-center py-8">
+                Start a conversation to see recommendations here.
+              </p>
+            ) : (
+              <div className="space-y-2 max-h-[320px] overflow-y-auto">
+                {allComponents.map((c, i) => (
+                  <div key={i} className="p-3 rounded-xl bg-surface-900/60 border border-surface-700 hover:border-primary-400/20 transition-colors">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-sm font-medium text-white">{c.name}</div>
+                        <div className="text-xs text-surface-400">{c.category}</div>
                       </div>
-
-                      <div className="mt-2.5 flex items-center gap-2">
-                        {c.product_url && (
-                          <a
-                            href={c.product_url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-1 text-xs text-surface-300 px-2.5 py-1.5 rounded-lg border border-surface-600/40 hover:text-white hover:border-surface-500/60"
-                          >
-                            <ExternalLink className="w-3.5 h-3.5" /> View Product
-                          </a>
-                        )}
-
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          onClick={() => addSingleToCart(c)}
-                          disabled={!c.id || cartLoadingId === c.id}
-                          className="!py-1.5"
-                        >
-                          <ShoppingCart className="w-3.5 h-3.5" />
-                          {cartLoadingId === c.id ? 'Adding...' : 'Add to Cart'}
-                        </Button>
+                      <div className="text-right">
+                        {c.price && <div className="text-sm font-bold text-primary-400">${c.price.toFixed(2)}</div>}
+                        {c.stock && <div className="text-[10px] text-surface-500">{c.stock} in stock</div>}
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
 
-          <Card>
-            <CardContent>
-              <div className="flex items-center gap-2 mb-3">
-                <Code2 className="w-4 h-4 text-accent" />
-                <h3 className="font-semibold text-sm">Embed on Your Website</h3>
+                    <div className="mt-2.5 flex items-center gap-2">
+                      {c.product_url && (
+                        <a
+                          href={c.product_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1 text-xs text-surface-300 px-2.5 py-1.5 rounded-lg border border-surface-600 hover:text-white hover:border-surface-500"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" /> View Product
+                        </a>
+                      )}
+
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => addSingleToCart(c)}
+                        disabled={!c.id || cartLoadingId === c.id}
+                        className="!py-1.5"
+                      >
+                        <ShoppingCart className="w-3.5 h-3.5" />
+                        {cartLoadingId === c.id ? 'Adding...' : 'Add to Cart'}
+                      </Button>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <p className="text-xs text-surface-400 mb-4">
-                Copy this script tag and paste it before the closing <code className="text-accent">&lt;/body&gt;</code> tag.
-              </p>
-              <div className="relative">
-                <pre className="p-4 rounded-xl bg-surface-900/70 border border-surface-700/30 text-xs text-accent overflow-x-auto whitespace-pre-wrap break-all font-mono leading-relaxed">
-                  {embedSnippet}
-                </pre>
-                <button
-                  onClick={copySnippet}
-                  className="absolute top-2.5 right-2.5 p-1.5 rounded-lg bg-surface-700/40 hover:bg-surface-700/60 transition-colors"
-                  title="Copy snippet"
-                >
-                  {copied ? (
-                    <Check className="w-3.5 h-3.5 text-accent" />
-                  ) : (
-                    <Copy className="w-3.5 h-3.5 text-surface-400" />
-                  )}
-                </button>
-              </div>
-            </CardContent>
-          </Card>
+            )}
+          </div>
+
+          <div className="bg-surface-800 border border-surface-700 rounded-2xl p-6">
+            <div className="flex items-center gap-2 mb-3">
+              <Code2 className="w-4 h-4 text-primary-400" />
+              <h3 className="font-semibold text-sm text-white">Embed on Your Website</h3>
+            </div>
+            <p className="text-xs text-surface-400 mb-4">
+              Copy this script tag and paste it before the closing <code className="text-primary-400">&lt;/body&gt;</code> tag.
+            </p>
+            <div className="relative">
+              <pre className="p-4 rounded-xl bg-surface-900 border border-surface-700 text-xs text-primary-400 overflow-x-auto whitespace-pre-wrap break-all font-mono leading-relaxed">
+                {embedSnippet}
+              </pre>
+              <button
+                onClick={copySnippet}
+                className="absolute top-2.5 right-2.5 p-1.5 rounded-lg bg-surface-700 hover:bg-surface-600 transition-colors"
+                title="Copy snippet"
+              >
+                {copied ? (
+                  <Check className="w-3.5 h-3.5 text-primary-400" />
+                ) : (
+                  <Copy className="w-3.5 h-3.5 text-surface-400" />
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
